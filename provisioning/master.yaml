@@ -1,0 +1,36 @@
+passwd:
+  users:
+    - name: core
+      ssh_authorized_keys:
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC3RpY6sH8G4ot+aMBLDw40yr7d+k1V18zdALhjr70r8RJMU4QyVUHIQU917EgcYnOELK53DfUG6D5i6sFZ9j7TemBxdm6vs622BgSz7mRtUAWu2py2MQFL2nCiWz8sRKIJdo8I6I68HURUwi7kllU9ysx61yZePkG+VbYqssq+pcrIXlzoymiU9fEIWrRRnM7ef5QchRzc/S2O5Q5tHmmbxOvKuQdDcywjvhYYAX0qbp+9RIEXSd6iJEkbnPH6KSKPacumOUgsdyJz2BlTceP1OqLrGQJpinsSanhHPvuqPHJ39BtDYXqTqdfsoT1GA+jncN/uyjtj0OXN8w2X/HeOWIYhyt73uyiqGo7Dkbg7v8F3Fe7Kg01t/QzyF858VVm50m7Q5sUplqwBZfusUpFbAX53G/j0gk77VBn9RGI+cWt7RimfwEkpcl4omSVHrb1H9nzWvkThFkkkT7BPIu2GftSzeySznzAXSAT2h1IcxvqO4LrVRUaPR5CGfACfSQdKfi3WDDVZXy1tpJEGSwWtVr/uzqVCTAi+Be8vyBiW9eL0BL87Q17aPqlqrbKgVcB32k2BBsN6WalmB+czw2sQzVTQPMAAtN4Z9xs0OUa5tYIOscehjVI+t2631DKhMGy6h71xFN+ZlufJ7WiwTxu4aXnM8SbYDqROfOXq4U/L4w== juuso@mail.com
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDcF9dSi2CfGoNxbChkne+6ZuKgtnFR4b6KxF2W99Dh/YDOyX8a+Xin7yjiMI10zrvJ7W8pRx2aNPsWsMCc5gn9p3E6TuiO6rU7uWFaZJFv28K1RL3c4ZuNjvPEBYpsEylS2eENhof9MvmDPXnlYO5XGQ/WrTIMhSOOvMdK5gPS+2sQW5PtmxApg34IJGFkc2E15Mdb94e/rM/aHUxCCMQLlu5KJ8qzOMoUjNLcNz69V1IqIzqDvOpEKMhO1CPowdzfA4Xgt7EKxX3gn5b2pbd9Zf0iEleYn7apLtSNcxep81HtGAG+sDGNJsq/z1RBdg1nAqWqcUL3ZDykhwSDoywN jude.okwuibe@aun.edu.ng
+networkd:
+  units:
+    - name: static.network
+      contents: |
+        [Match]
+        Name=eno1
+
+        [Network]
+        DNS=1.1.1.1
+        Address=192.168.4.151/24
+        Gateway=192.168.4.254
+        LinkLocalAddressing=no
+        IPv6AcceptRA=no
+etcd:
+  name:                        hp-cerealbox-01
+  listen_client_urls:          http://0.0.0.0:2379
+  advertise_client_urls:       http://192.168.4.151:2379
+  listen_peer_urls:            http://192.168.4.151:2380
+  initial_advertise_peer_urls: http://192.168.4.151:2380
+  initial_cluster:             hp-cerealbox-01=http://192.168.4.151:2380,hp-cerealbox-02=http://192.168.4.152:2380
+  initial_cluster_state:       new
+systemd:
+  units:
+    - name: flanneld.service
+      dropins:
+        - name: 50-network-config.conf
+          contents: |
+            [Service]
+            ExecStartPre=/usr/bin/etcdctl set /coreos.com/network/config '{ "Network": "10.1.0.0/16" }'
+flannel: ~
