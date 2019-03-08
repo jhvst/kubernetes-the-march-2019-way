@@ -1,0 +1,34 @@
+[Unit]
+Description=Kubernetes API Server
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+Environment=RKT_GLOBAL_ARGS="--insecure-options=image"
+Environment=KUBELET_IMAGE_URL=docker://gcr.io/google-containers/hyperkube-amd64
+Environment=KUBELET_IMAGE_TAG=v1.13.4
+Environment="RKT_RUN_ARGS=--uuid-file-save=/var/run/kubelet-pod.uuid \
+  --volume var-log,kind=host,source=/var/log \
+  --mount volume=var-log,target=/var/log \
+  --volume dns,kind=host,source=/etc/resolv.conf \
+  --mount volume=dns,target=/etc/resolv.conf"
+ExecStartPre=/usr/bin/mkdir -p /etc/kubernetes/manifests
+ExecStartPre=/usr/bin/mkdir -p /var/log/containers
+ExecStartPre=-/usr/bin/rkt rm --uuid-file=/var/run/kubelet-pod.uuid
+ExecStart=/usr/lib/coreos/kubelet-wrapper \
+  --cni-conf-dir=/etc/kubernetes/cni/net.d \
+  --network-plugin=cni \
+  --container-runtime=docker \
+  --allow-privileged=true \
+  --pod-manifest-path=/etc/kubernetes/manifests \
+  --hostname-override=192.168.4.151 \
+  --cluster_dns=10.3.0.10 \
+  --cluster_domain=cluster.local \
+  --kubeconfig=/etc/kubernetes/master.kubeconfig \
+  --client-ca-file=/etc/kubernetes/ssl/ca.pem \
+  --v=2
+ExecStop=-/usr/bin/rkt stop --uuid-file=/var/run/kubelet-pod.uuid
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
