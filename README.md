@@ -35,6 +35,16 @@ Here, we do bunch of "claims". Claims are documentation told somewhere. Then, "e
 
 ---
 
+- claim: containers can ping google.com
+- error: not with my router, [add upstreamNameservers to CoreDNS configuration to avoid issues](https://github.com/toldjuuso/kubernetes-the-march-2019-way/commit/beec22730e19d0fe87aaf473819b3940ab385a61)
+
+---
+
+- claim: [according to CoreOS documentation](https://coreos.com/kubernetes/docs/1.6.1/deploy-workers.html), the worker kube-proxy configuration takes in master host without protocol prefix
+- error: [CoreOS documentation is wrong](https://stackoverflow.com/a/44025007/2464828), you must specify https protocol prefix, [like this](https://github.com/toldjuuso/kubernetes-the-march-2019-way/commit/042b5636be961709a9478bb9b5b4eb55e226a468)
+
+---
+
 bonuses:
 
 - assumption: computers run on the same time
