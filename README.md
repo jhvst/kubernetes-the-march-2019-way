@@ -35,8 +35,8 @@ Here, we do bunch of "claims". Claims are documentation told somewhere. Then, "e
 
 ---
 
-- claim: containers can ping google.com
-- error: not with my router, [add upstreamNameservers to CoreDNS configuration to avoid issues](https://github.com/toldjuuso/kubernetes-the-march-2019-way/commit/beec22730e19d0fe87aaf473819b3940ab385a61)
+- assumption: containers can reach google.com
+- error: not with my router [(and seemingly others)](https://github.com/coreos/flannel/issues/983#issuecomment-383680337), [add upstreamNameservers to CoreDNS configuration to avoid issues](https://github.com/toldjuuso/kubernetes-the-march-2019-way/commit/beec22730e19d0fe87aaf473819b3940ab385a61)
 
 ---
 
@@ -48,5 +48,5 @@ Here, we do bunch of "claims". Claims are documentation told somewhere. Then, "e
 bonuses:
 
 - assumption: computers run on the same time
-- error: Arch Linux runs 1 minute in the future, [causing etc consensus to fail](https://github.com/etcd-io/etcd/issues/7051)
+- error: Arch Linux runs 1 minute in the future, [causing etcd consensus to fail](https://github.com/etcd-io/etcd/issues/7051)
 - therapy: install and enable NTP client on Arch Linux
