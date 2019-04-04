@@ -45,8 +45,9 @@ Here, we do bunch of "claims". Claims are documentation told somewhere. Then, "e
 
 ---
 
-- error: `no route to host` with pod-to-pod and pod-to-apiserver connections
-- therapy: [flannel default configuration creates a conflicting `cni0` and `docker0` interfaces](https://github.com/coreos/flannel/issues/1013) on the control-plane node, of which the `cni0` subnet [has to be refreshed by running `ip link delete cni0`](https://github.com/kubernetes/kubernetes/issues/39557#issuecomment-457839765), after which `sudo systemctl restart kubelet` should fix the connection problem -- further, this change seems to persist on reboots
+- claim: kube-apiserver network interfaces are configured correctly on installation
+- error: `no route to host` will appear on pod-to-pod and pod-to-apiserver connections
+- therapy: [flannel default configuration creates a conflicting `cni0` and `docker0` interfaces](https://github.com/coreos/flannel/issues/1013) on the control-plane node, of which the `docker0` interface [should be reconfigured by using a service file](https://stackoverflow.com/questions/37018720/how-to-change-docker0-setting-in-coreos/37031476#37031476)
 
 ---
 
